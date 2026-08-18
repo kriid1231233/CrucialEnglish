@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PublicController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PublicController::class, 'home'])->name('home');
+
+Route::get('/catalogo', [PublicController::class, 'catalogo'])->name('catalogo.index');
+Route::get('/nosotros', [PublicController::class, 'nosotros'])->name('nosotros');
+Route::get('/contacto', [PublicController::class, 'contacto'])->name('contacto');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
