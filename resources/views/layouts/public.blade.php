@@ -70,6 +70,22 @@
         footer a:hover {
             color: var(--ce-white);
         }
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.12);
+            color: var(--ce-white) !important;
+            font-size: 1.1rem;
+            transition: background-color 0.2s ease;
+        }
+        .social-icon:hover {
+            background-color: var(--ce-blue);
+            color: var(--ce-white) !important;
+        }
     </style>
 
     @stack('styles')
@@ -138,10 +154,21 @@
                     <h5 class="d-flex align-items-center mb-3">
                         <i class="bi bi-mortarboard-fill me-2"></i> CrucialEnglish
                     </h5>
-                    <p class="small mb-0">
+                    <p class="small mb-3">
                         Plataforma integral de enseñanza de inglés: clases, materiales
                         y seguimiento académico en un solo lugar.
                     </p>
+                    <div class="d-flex gap-2">
+                        <a href="https://www.facebook.com/crucial.english" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="https://www.instagram.com/crucialenglish.cl/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="tel:+56992969031" class="social-icon" aria-label="Llamar por teléfono">
+                            <i class="bi bi-telephone-fill"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <h6 class="mb-3">Enlaces</h6>
@@ -155,9 +182,25 @@
                 <div class="col-md-4">
                     <h6 class="mb-3">Contacto</h6>
                     <ul class="list-unstyled small">
-                        <li class="mb-2"><i class="bi bi-envelope-fill me-2"></i>contacto@crucialenglish.cl</li>
-                        <li class="mb-2"><i class="bi bi-telephone-fill me-2"></i>+56 9 0000 0000</li>
+                        <li class="mb-2">
+                            <i class="bi bi-envelope-fill me-2"></i>contacto@crucialenglish.cl
+                        </li>
+                        <li class="mb-2">
+                            <a href="tel:+56992969031">
+                                <i class="bi bi-telephone-fill me-2"></i>+56 9 9296 9031
+                            </a>
+                        </li>
                         <li class="mb-2"><i class="bi bi-geo-alt-fill me-2"></i>Santiago, Chile</li>
+                        <li class="mb-2">
+                            <a href="https://www.facebook.com/crucial.english" target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-facebook me-2"></i>@ crucial.english
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="https://www.instagram.com/crucialenglish.cl/" target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-instagram me-2"></i>@ crucialenglish.cl
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
