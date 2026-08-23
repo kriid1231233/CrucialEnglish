@@ -14,58 +14,61 @@
 
     <style>
         :root {
-            --ce-purple: #6f42c1;
-            --ce-purple-dark: #59339d;
-            --ce-purple-light: #f3edfb;
+            --ce-primary: #253267;
+            --ce-primary-dark: #182e6a;
+            --ce-blue: #1265a1;
+            --ce-blue-light: #1666a3;
+            --ce-white: #ffffff;
+            --ce-light-tint: #eef2fa;
         }
         body {
             font-family: 'Figtree', sans-serif;
         }
         .navbar-brand span {
-            color: var(--ce-purple);
+            color: var(--ce-primary);
             font-weight: 700;
         }
         .btn-ce-primary {
-            background-color: var(--ce-purple);
-            border-color: var(--ce-purple);
-            color: #fff;
+            background-color: var(--ce-blue);
+            border-color: var(--ce-blue);
+            color: var(--ce-white);
         }
         .btn-ce-primary:hover {
-            background-color: var(--ce-purple-dark);
-            border-color: var(--ce-purple-dark);
-            color: #fff;
+            background-color: var(--ce-primary-dark);
+            border-color: var(--ce-primary-dark);
+            color: var(--ce-white);
         }
         .btn-outline-ce-primary {
-            border-color: var(--ce-purple);
-            color: var(--ce-purple);
+            border-color: var(--ce-blue);
+            color: var(--ce-blue);
         }
         .btn-outline-ce-primary:hover {
-            background-color: var(--ce-purple);
-            color: #fff;
+            background-color: var(--ce-blue);
+            color: var(--ce-white);
         }
-        .text-ce-purple {
-            color: var(--ce-purple) !important;
+        .text-ce-primary {
+            color: var(--ce-primary) !important;
         }
-        .bg-ce-purple {
-            background-color: var(--ce-purple) !important;
+        .bg-ce-primary {
+            background-color: var(--ce-primary) !important;
         }
-        .bg-ce-purple-light {
-            background-color: var(--ce-purple-light) !important;
+        .bg-ce-light {
+            background-color: var(--ce-light-tint) !important;
         }
         .hero-section {
-            background: linear-gradient(135deg, var(--ce-purple) 0%, var(--ce-purple-dark) 100%);
-            color: #fff;
+            background: linear-gradient(135deg, var(--ce-primary) 0%, var(--ce-primary-dark) 100%);
+            color: var(--ce-white);
         }
         .navbar-nav .nav-link.active {
-            color: var(--ce-purple) !important;
+            color: var(--ce-blue) !important;
             font-weight: 600;
         }
         footer a {
-            color: #d9c9f0;
+            color: #c7d3ec;
             text-decoration: none;
         }
         footer a:hover {
-            color: #fff;
+            color: var(--ce-white);
         }
     </style>
 
@@ -77,7 +80,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
-                <i class="bi bi-mortarboard-fill text-ce-purple fs-3 me-2"></i>
+                <i class="bi bi-mortarboard-fill text-ce-primary fs-3 me-2"></i>
                 <span class="fs-4">CrucialEnglish</span>
             </a>
 
@@ -128,7 +131,7 @@
     </main>
 
     {{-- Footer institucional --}}
-    <footer class="bg-ce-purple text-white pt-5 pb-3 mt-5">
+    <footer class="bg-ce-primary text-white pt-5 pb-3 mt-5">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4">
