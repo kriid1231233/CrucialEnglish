@@ -1,80 +1,27 @@
-# Laravel
+/.phpunit.cache
+/bootstrap/ssr
 /node_modules
+/public/build
 /public/hot
 /public/storage
 /storage/*.key
+/storage/pail
 /vendor
 .env
 .env.backup
-.phpunit.result.cache
-docker-compose.override.yml
+.env.production
+.phpactor.json
 Homestead.json
 Homestead.yaml
+auth.json
 npm-debug.log
 yarn-error.log
+/.fleet
 /.idea
+/.nova
 /.vscode
+/.zed
 
-# Composer
-composer.phar
-composer.lock
-
-# NPM / Yarn
-package-lock.json
-yarn.lock
-
-# Build artifacts
-/public/build
-/public/mix-manifest.json
-*.log
-
-# IDE
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-.DS_Store
-Thumbs.db
-
-# Testing
-/coverage
-/.phpunit.cache
-
-# Laravel Telescope (si se usa)
-/storage/telescope/
-
-# Laravel Debugbar (si se usa)
-/.debugbar
-
-# Backups
-*.sql
-*.backup
-
-# Temporary files
-*.tmp
-*.swp
-*.swo
-*~
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Laravel Specific
-auth.json
-
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Laravel Mix
-/public/css/
-/public/js/
-mix-manifest.json
+# Caché compilada de Laravel - nunca debe versionarse
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitkeep
