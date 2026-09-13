@@ -24,7 +24,7 @@ class UpdateRecordedLessonRequest extends FormRequest
         return [
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'level_id' => ['sometimes', 'exists:levels,id'],
+            'level_id' => ['sometimes', 'exists:niveles,id'],
             'duration_minutes' => ['sometimes', 'integer', 'min:1', 'max:300'],
             'video_path' => ['nullable', 'string', 'max:500'],
             'external_link' => ['nullable', 'url', 'max:500'],

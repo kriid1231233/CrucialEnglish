@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
         $user->load('roles');
         
         if ($user->roles && $user->roles->count() === 1) {
-            session(['active_role' => $user->roles->first()->slug]);
+            session(['active_role' => $user->roles->first()->identificador]);
         }
 
         return redirect()->intended(route('dashboard', absolute: false));

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ContactMessage extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'mensajes_contacto';
 
     /**
      * The attributes that are mass assignable.
@@ -15,10 +18,10 @@ class ContactMessage extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nombre',
         'email',
-        'message',
-        'read_at',
+        'mensaje',
+        'leido_en',
     ];
 
     /**
@@ -29,7 +32,7 @@ class ContactMessage extends Model
     protected function casts(): array
     {
         return [
-            'read_at' => 'datetime',
+            'leido_en' => 'datetime',
         ];
     }
 
@@ -40,8 +43,8 @@ class ContactMessage extends Model
      */
     public function markAsRead(): bool
     {
-        if ($this->read_at === null) {
-            $this->read_at = now();
+        if ($this->leido_en === null) {
+            $this->leido_en = now();
             return $this->save();
         }
         return false;

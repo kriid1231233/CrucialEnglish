@@ -23,7 +23,7 @@ class ProductPolicy
     public function view(?User $user, Product $product): bool
     {
         // Productos activos son públicos
-        if ($product->is_active) {
+        if ($product->activo) {
             return true;
         }
 

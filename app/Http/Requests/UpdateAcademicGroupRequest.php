@@ -21,8 +21,8 @@ class UpdateAcademicGroupRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'level_id' => ['sometimes', 'exists:levels,id'],
-            'teacher_id' => ['sometimes', 'exists:users,id'],
+            'level_id' => ['sometimes', 'exists:niveles,id'],
+            'teacher_id' => ['sometimes', 'exists:usuarios,id'],
             'schedule_description' => ['nullable', 'string', 'max:500'],
             'is_active' => ['boolean'],
         ];

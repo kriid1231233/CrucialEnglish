@@ -52,28 +52,28 @@ class RegisteredUserController extends Controller
         $user = DB::transaction(function () use ($request) {
             // 1. Crear usuario
             $user = User::create([
-                'name' => $request->name,
+                'nombre' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'active' => true,
+                'activo' => true,
                 'email_verified_at' => now(),
             ]);
 
             // 2. Crear perfil de estudiante automáticamente
             StudentProfile::create([
-                'user_id' => $user->id,
-                'phone' => null,
-                'birth_date' => null,
-                'contact_preferences' => null,
-                'availability_notes' => null,
+                'usuario_id' => $user->id,
+                'telefono' => null,
+                'fecha_nacimiento' => null,
+                'preferencias_contacto' => null,
+                'notas_disponibilidad' => null,
             ]);
 
             // 3. Asignar rol de estudiante
-            $studentRole = Role::where('slug', 'estudiante')->first();
+            $studentRole = Role::where('identificador', 'estudiante')->first();
             if ($studentRole) {
                 $user->roles()->attach($studentRole->id, [
-                    'assigned_at' => now(),
-                    'assigned_by' => null, // Autoasignado en registro
+                    'asignado_en' => now(),
+                    'asignado_por' => null, // Autoasignado en registro
                 ]);
             }
 

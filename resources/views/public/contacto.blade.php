@@ -20,12 +20,8 @@
                     </div>
                 @endif
 
-                {{--
-                    NOTA PARA CONEXIÓN A BACKEND:
-                    action="{{ route('contacto.store') }}" — crear ContactoController@store
-                    que valide y guarde en la tabla contact_messages (RF-006).
-                --}}
-                <form method="POST" action="#" class="card border-0 shadow-sm p-4">
+                {{-- Guardado en la tabla contact_messages vía PublicController@contactoStore --}}
+                <form method="POST" action="{{ route('contacto.store') }}" class="card border-0 shadow-sm p-4">
                     @csrf
 
                     <div class="mb-3">

@@ -24,7 +24,7 @@ class StoreMaterialRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'level_id' => ['required', 'exists:levels,id'],
+            'level_id' => ['required', 'exists:niveles,id'],
             'file_type' => ['required', 'string', 'max:50'],
             'file_path' => ['nullable', 'string', 'max:500'],
             'external_link' => ['nullable', 'url', 'max:500'],

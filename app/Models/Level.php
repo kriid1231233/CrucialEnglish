@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Level extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +17,10 @@ class Level extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'code',
-        'name',
-        'description',
-        'order',
+        'codigo',
+        'nombre',
+        'descripcion',
+        'orden',
     ];
 
     /**
@@ -30,7 +31,7 @@ class Level extends Model
     protected function casts(): array
     {
         return [
-            'order' => 'integer',
+            'orden' => 'integer',
         ];
     }
 
@@ -40,7 +41,7 @@ class Level extends Model
      */
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'nivel_id');
     }
 
     /**
@@ -49,7 +50,7 @@ class Level extends Model
      */
     public function academicGroups(): HasMany
     {
-        return $this->hasMany(AcademicGroup::class);
+        return $this->hasMany(AcademicGroup::class, 'nivel_id');
     }
 
     /**
@@ -58,7 +59,7 @@ class Level extends Model
      */
     public function grades(): HasMany
     {
-        return $this->hasMany(StudentGrade::class);
+        return $this->hasMany(StudentGrade::class, 'nivel_id');
     }
 
     /**
@@ -67,7 +68,7 @@ class Level extends Model
      */
     public function records(): HasMany
     {
-        return $this->hasMany(StudentRecord::class);
+        return $this->hasMany(StudentRecord::class, 'nivel_id');
     }
 
     /**
@@ -76,7 +77,7 @@ class Level extends Model
      */
     public function materials(): HasMany
     {
-        return $this->hasMany(Material::class);
+        return $this->hasMany(Material::class, 'nivel_id');
     }
 
     /**
@@ -85,7 +86,7 @@ class Level extends Model
      */
     public function recordedLessons(): HasMany
     {
-        return $this->hasMany(RecordedLesson::class);
+        return $this->hasMany(RecordedLesson::class, 'nivel_id');
     }
 
     /**

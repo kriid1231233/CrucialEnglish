@@ -15,7 +15,7 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // Verificar que el rol admin exista
-        $adminRole = Role::where('slug', Role::ADMIN)->first();
+        $adminRole = Role::where('identificador', Role::ADMIN)->first();
         
         if (!$adminRole) {
             $this->command->error('❌ Error: El rol Administrador no existe. Ejecuta RoleSeeder primero.');
@@ -26,18 +26,18 @@ class AdminUserSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['email' => 'admin@crucialenglish.com'],
             [
-                'name' => 'Administrador',
+                'nombre' => 'Administrador',
                 'password' => Hash::make('Admin123!'),
                 'email_verified_at' => now(),
-                'active' => true,
+                'activo' => true,
             ]
         );
 
         // Asignar rol de administrador si no lo tiene
-        if (!$admin->roles()->where('role_id', $adminRole->id)->exists()) {
+        if (!$admin->roles()->where('rol_id', $adminRole->id)->exists()) {
             $admin->roles()->attach($adminRole->id, [
-                'assigned_at' => now(),
-                'assigned_by' => null, // Auto-asignado en seeder
+                'asignado_en' => now(),
+                'asignado_por' => null, // Auto-asignado en seeder
             ]);
         }
 

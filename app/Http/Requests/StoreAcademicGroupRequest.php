@@ -21,8 +21,8 @@ class StoreAcademicGroupRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'level_id' => ['required', 'exists:levels,id'],
-            'teacher_id' => ['required', 'exists:users,id'],
+            'level_id' => ['required', 'exists:niveles,id'],
+            'teacher_id' => ['required', 'exists:usuarios,id'],
             'schedule_description' => ['nullable', 'string', 'max:500'],
             'is_active' => ['boolean'],
         ];

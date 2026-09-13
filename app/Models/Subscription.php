@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Subscription extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'suscripciones';
 
     /**
      * The attributes that are mass assignable.
@@ -16,11 +19,11 @@ class Subscription extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
-        'product_id',
-        'starts_at',
-        'ends_at',
-        'status',
+        'estudiante_id',
+        'producto_id',
+        'inicia_en',
+        'termina_en',
+        'estado',
     ];
 
     /**
@@ -31,8 +34,8 @@ class Subscription extends Model
     protected function casts(): array
     {
         return [
-            'starts_at' => 'datetime',
-            'ends_at' => 'datetime',
+            'inicia_en' => 'datetime',
+            'termina_en' => 'datetime',
         ];
     }
 
@@ -42,7 +45,7 @@ class Subscription extends Model
      */
     public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'estudiante_id');
     }
 
     /**
@@ -51,7 +54,7 @@ class Subscription extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'producto_id');
     }
 
     /**
@@ -61,8 +64,8 @@ class Subscription extends Model
      */
     public function isActive(): bool
     {
-        return $this->status === self::STATUS_ACTIVE && 
-               now()->between($this->starts_at, $this->ends_at);
+        return $this->estado === self::STATUS_ACTIVE && 
+               now()->between($this->inicia_en, $this->termina_en);
     }
 
     /**

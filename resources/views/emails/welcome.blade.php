@@ -47,7 +47,7 @@
         <h1>¡Bienvenido a CrucialEnglish!</h1>
     </div>
     <div class="content">
-        <p>Hola <strong>{{ $user->name }}</strong>,</p>
+        <p>Hola <strong>{{ $user->nombre }}</strong>,</p>
         
         <p>¡Gracias por registrarte en CrucialEnglish! Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
         

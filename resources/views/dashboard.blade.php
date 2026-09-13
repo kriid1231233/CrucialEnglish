@@ -14,7 +14,7 @@
         <div class="container">
             <a class="navbar-brand" href="/">CrucialEnglish</a>
             <div class="navbar-nav ms-auto">
-                <span class="navbar-text me-3">{{ Auth::user()->name }}</span>
+                <span class="navbar-text me-3">{{ Auth::user()->nombre }}</span>
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>

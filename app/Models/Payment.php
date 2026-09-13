@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'pagos';
 
     /**
      * The attributes that are mass assignable.
@@ -16,12 +19,12 @@ class Payment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'order_id',
-        'transaction_id',
-        'amount',
-        'status',
-        'payment_method',
-        'payment_date',
+        'pedido_id',
+        'id_transaccion',
+        'monto',
+        'estado',
+        'metodo_pago',
+        'fecha_pago',
     ];
 
     /**
@@ -32,8 +35,8 @@ class Payment extends Model
     protected function casts(): array
     {
         return [
-            'amount' => 'decimal:2',
-            'payment_date' => 'datetime',
+            'monto' => 'decimal:2',
+            'fecha_pago' => 'datetime',
         ];
     }
 
@@ -43,7 +46,7 @@ class Payment extends Model
      */
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'pedido_id');
     }
 
     /**

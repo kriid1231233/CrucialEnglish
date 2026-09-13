@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StudentAccess extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'accesos_estudiante';
 
     /**
      * The attributes that are mass assignable.
@@ -16,12 +19,12 @@ class StudentAccess extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
-        'product_id',
-        'access_type',
-        'granted_at',
-        'expires_at',
-        'is_active',
+        'estudiante_id',
+        'producto_id',
+        'tipo_acceso',
+        'otorgado_en',
+        'expira_en',
+        'activo',
     ];
 
     /**
@@ -32,9 +35,9 @@ class StudentAccess extends Model
     protected function casts(): array
     {
         return [
-            'granted_at' => 'datetime',
-            'expires_at' => 'datetime',
-            'is_active' => 'boolean',
+            'otorgado_en' => 'datetime',
+            'expira_en' => 'datetime',
+            'activo' => 'boolean',
         ];
     }
 
@@ -44,7 +47,7 @@ class StudentAccess extends Model
      */
     public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'estudiante_id');
     }
 
     /**
@@ -53,7 +56,7 @@ class StudentAccess extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'producto_id');
     }
 
     /**
@@ -63,8 +66,8 @@ class StudentAccess extends Model
      */
     public function isValid(): bool
     {
-        return $this->is_active && 
-               ($this->expires_at === null || now()->lte($this->expires_at));
+        return $this->activo && 
+               ($this->expira_en === null || now()->lte($this->expira_en));
     }
 
     /**

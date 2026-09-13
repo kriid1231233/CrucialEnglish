@@ -20,6 +20,8 @@
             --ce-blue-light: #1666a3;
             --ce-white: #ffffff;
             --ce-light-tint: #eef2fa;
+            --ce-purple: #253267;
+            --ce-purple-light: #eef2fa;
         }
         body {
             font-family: 'Figtree', sans-serif;
@@ -54,6 +56,20 @@
         }
         .bg-ce-light {
             background-color: var(--ce-light-tint) !important;
+        }
+        .text-ce-purple {
+            color: var(--ce-purple) !important;
+        }
+        .bg-ce-purple-light {
+            background-color: var(--ce-purple-light) !important;
+        }
+        .btn-ce-primary {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .btn-ce-primary:hover,
+        .btn-outline-ce-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0.5rem 1rem rgba(18, 101, 161, 0.25);
         }
         .hero-section {
             background: linear-gradient(135deg, var(--ce-primary) 0%, var(--ce-primary-dark) 100%);
@@ -120,8 +136,18 @@
                     </li>
                 </ul>
 
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 align-items-center">
                     @auth
+                        @if (auth()->user()->hasRole(\App\Models\Role::STUDENT))
+                            <a href="{{ route('student.cart.index') }}" class="btn btn-outline-ce-primary position-relative">
+                                <i class="bi bi-cart-fill"></i>
+                                @if (auth()->user()->cartItemsCount() > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ auth()->user()->cartItemsCount() }}
+                                    </span>
+                                @endif
+                            </a>
+                        @endif
                         <a href="{{ route('dashboard') }}" class="btn btn-ce-primary">Mi Panel</a>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-ce-primary">Iniciar Sesión</a>

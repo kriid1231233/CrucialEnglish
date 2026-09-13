@@ -14,25 +14,25 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             [
-                'name' => 'Estudiante',
-                'slug' => Role::STUDENT,
-                'description' => 'Usuario que accede a clases, materiales y contenido educativo',
+                'nombre' => 'Estudiante',
+                'identificador' => Role::STUDENT,
+                'descripcion' => 'Usuario que accede a clases, materiales y contenido educativo',
             ],
             [
-                'name' => 'Docente',
-                'slug' => Role::TEACHER,
-                'description' => 'Usuario que gestiona grupos, registra asistencia, crea materiales y evalúa estudiantes',
+                'nombre' => 'Docente',
+                'identificador' => Role::TEACHER,
+                'descripcion' => 'Usuario que gestiona grupos, registra asistencia, crea materiales y evalúa estudiantes',
             ],
             [
-                'name' => 'Administrador',
-                'slug' => Role::ADMIN,
-                'description' => 'Usuario con acceso completo al sistema, gestiona productos, usuarios y aprueba contenido',
+                'nombre' => 'Administrador',
+                'identificador' => Role::ADMIN,
+                'descripcion' => 'Usuario con acceso completo al sistema, gestiona productos, usuarios y aprueba contenido',
             ],
         ];
 
         foreach ($roles as $roleData) {
             Role::firstOrCreate(
-                ['slug' => $roleData['slug']],
+                ['identificador' => $roleData['identificador']],
                 $roleData
             );
         }

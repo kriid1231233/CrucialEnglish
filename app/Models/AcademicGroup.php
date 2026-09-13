@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,15 +12,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AcademicGroup extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ConMarcasDeTiempoEnEspanol;
 
     /**
      * La tabla asociada al modelo.
-     * Se usa 'academic_groups' porque 'groups' es palabra reservada en MySQL.
+     * Se usa 'grupos_academicos' porque 'grupos' es ambiguo y 'groups' es palabra reservada en MySQL.
      *
      * @var string
      */
-    protected $table = 'academic_groups';
+    protected $table = 'grupos_academicos';
+
+    /** Columna de borrado suave en español. */
+    const DELETED_AT = 'eliminado_en';
 
     /**
      * The attributes that are mass assignable.
@@ -27,11 +31,11 @@ class AcademicGroup extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'level_id',
-        'teacher_id',
-        'schedule_description',
-        'is_active',
+        'nombre',
+        'nivel_id',
+        'docente_id',
+        'descripcion_horario',
+        'activo',
     ];
 
     /**
@@ -42,7 +46,7 @@ class AcademicGroup extends Model
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'activo' => 'boolean',
         ];
     }
 
@@ -52,7 +56,7 @@ class AcademicGroup extends Model
      */
     public function level(): BelongsTo
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Level::class, 'nivel_id');
     }
 
     /**
@@ -61,17 +65,17 @@ class AcademicGroup extends Model
      */
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(User::class, 'docente_id');
     }
 
     /**
      * Los estudiantes inscritos en este grupo.
-     * Relación muchos a muchos a través de group_students.
+     * Relación muchos a muchos a través de estudiantes_grupo.
      */
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'group_students', 'group_id', 'student_id')
-            ->withPivot('joined_at', 'left_at', 'is_active')
+        return $this->belongsToMany(User::class, 'estudiantes_grupo', 'grupo_id', 'estudiante_id')
+            ->withPivot('union_en', 'salida_en', 'activo')
             ->withTimestamps();
     }
 
@@ -82,7 +86,7 @@ class AcademicGroup extends Model
      */
     public function activeStudents(): BelongsToMany
     {
-        return $this->students()->wherePivot('is_active', true);
+        return $this->students()->wherePivot('activo', true);
     }
 
     /**
@@ -91,7 +95,7 @@ class AcademicGroup extends Model
      */
     public function classSessions(): HasMany
     {
-        return $this->hasMany(ClassSession::class, 'group_id');
+        return $this->hasMany(ClassSession::class, 'grupo_id');
     }
 
     /**
@@ -100,6 +104,6 @@ class AcademicGroup extends Model
      */
     public function grades(): HasMany
     {
-        return $this->hasMany(StudentGrade::class, 'group_id');
+        return $this->hasMany(StudentGrade::class, 'grupo_id');
     }
 }

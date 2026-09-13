@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RecordedLesson extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'clases_grabadas';
 
     /**
      * The attributes that are mass assignable.
@@ -16,16 +19,16 @@ class RecordedLesson extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
-        'description',
-        'level_id',
-        'duration_minutes',
-        'video_path',
-        'external_link',
-        'status',
-        'author_id',
-        'reviewed_by',
-        'reviewed_at',
+        'titulo',
+        'descripcion',
+        'nivel_id',
+        'duracion_minutos',
+        'ruta_video',
+        'enlace_externo',
+        'estado',
+        'autor_id',
+        'revisado_por',
+        'revisado_en',
     ];
 
     /**
@@ -36,8 +39,8 @@ class RecordedLesson extends Model
     protected function casts(): array
     {
         return [
-            'duration_minutes' => 'integer',
-            'reviewed_at' => 'datetime',
+            'duracion_minutos' => 'integer',
+            'revisado_en' => 'datetime',
         ];
     }
 
@@ -47,7 +50,7 @@ class RecordedLesson extends Model
      */
     public function level(): BelongsTo
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Level::class, 'nivel_id');
     }
 
     /**
@@ -56,7 +59,7 @@ class RecordedLesson extends Model
      */
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'autor_id');
     }
 
     /**
@@ -65,7 +68,7 @@ class RecordedLesson extends Model
      */
     public function reviewer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'reviewed_by');
+        return $this->belongsTo(User::class, 'revisado_por');
     }
 
     /**

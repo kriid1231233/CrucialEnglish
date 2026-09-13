@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductType extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'tipos_producto';
 
     /**
      * The attributes that are mass assignable.
@@ -16,9 +19,9 @@ class ProductType extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'slug',
-        'description',
+        'nombre',
+        'identificador',
+        'descripcion',
     ];
 
     /**
@@ -27,11 +30,11 @@ class ProductType extends Model
      */
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'tipo_producto_id');
     }
 
     /**
-     * Slugs de tipos de producto del sistema (constantes).
+     * Identificadores de tipos de producto del sistema (constantes).
      */
     public const INDIVIDUAL_CLASS = 'clase-individual';
     public const GROUP_CLASS = 'clase-grupal';

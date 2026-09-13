@@ -35,46 +35,57 @@
             </div>
         </div>
 
-        {{--
-            NOTA PARA CONEXIÓN A BACKEND:
-            Reemplazar este array estático por $productos (colección Eloquent)
-            proveniente de ProductoController@index, con paginación.
-        --}}
-        @php
-            $productosDemo = [
-                ['nombre' => 'Inglés Individual A1-A2', 'tipo' => 'Clase Individual', 'nivel' => 'A1-A2', 'precio' => 45000, 'icono' => 'bi-person-video3'],
-                ['nombre' => 'Grupo Conversacional B1', 'tipo' => 'Clase Grupal', 'nivel' => 'B1', 'precio' => 28000, 'icono' => 'bi-people-fill'],
-                ['nombre' => 'Guía de Gramática Completa', 'tipo' => 'Material de Apoyo', 'nivel' => 'Todos', 'precio' => 12000, 'icono' => 'bi-file-earmark-text-fill'],
-                ['nombre' => 'Suscripción Mensual Premium', 'tipo' => 'Suscripción', 'nivel' => 'Todos', 'precio' => 25000, 'icono' => 'bi-play-circle-fill'],
-                ['nombre' => 'Preparación Business English C1', 'tipo' => 'Clase Individual', 'nivel' => 'C1', 'precio' => 52000, 'icono' => 'bi-briefcase-fill'],
-                ['nombre' => 'Grupo Intensivo B2', 'tipo' => 'Clase Grupal', 'nivel' => 'B2', 'precio' => 32000, 'icono' => 'bi-people-fill'],
-            ];
-        @endphp
+        @auth
+            @if (auth()->user()->hasRole(\App\Models\Role::STUDENT))
+                <div class="text-end mb-3">
+                    <a href="{{ route('student.cart.index') }}" class="btn btn-outline-ce-primary">
+                        <i class="bi bi-cart-fill me-1"></i>Ver mi carrito
+                        @if (auth()->user()->cartItemsCount() > 0)
+                            <span class="badge bg-ce-primary ms-1">{{ auth()->user()->cartItemsCount() }}</span>
+                        @endif
+                    </a>
+                </div>
+            @endif
+        @endauth
 
         <div class="row g-4">
-            @foreach ($productosDemo as $producto)
+            @forelse ($productos as $producto)
                 <div class="col-lg-4 col-md-6">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body d-flex flex-column">
                             <div class="mb-3">
-                                <span class="badge bg-ce-purple-light text-ce-purple mb-2">{{ $producto['tipo'] }}</span>
-                                <span class="badge bg-light text-dark border">{{ $producto['nivel'] }}</span>
+                                <span class="badge bg-ce-purple-light text-ce-purple mb-2">{{ $producto->productType?->nombre }}</span>
+                                @if ($producto->level)
+                                    <span class="badge bg-light text-dark border">{{ $producto->level->codigo }}</span>
+                                @endif
                             </div>
                             <div class="text-center mb-3">
-                                <i class="bi {{ $producto['icono'] }} fs-1 text-ce-purple"></i>
+                                <i class="bi bi-mortarboard fs-1 text-ce-purple"></i>
                             </div>
-                            <h5 class="fw-semibold">{{ $producto['nombre'] }}</h5>
+                            <h5 class="fw-semibold">{{ $producto->nombre }}</h5>
                             <p class="text-muted small flex-grow-1">
-                                Producto académico disponible para estudiantes registrados.
+                                {{ $producto->descripcion ?? 'Producto académico disponible para estudiantes registrados.' }}
                             </p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <span class="fs-5 fw-bold text-ce-purple">
-                                    ${{ number_format($producto['precio'], 0, ',', '.') }}
+                                    @if ($producto->currentPrice() != $producto->base_price)
+                                        <del class="text-muted fs-6">${{ number_format($producto->base_price, 0, ',', '.') }}</del>
+                                    @endif
+                                    ${{ number_format($producto->currentPrice(), 0, ',', '.') }}
                                 </span>
                                 @auth
-                                    <button class="btn btn-ce-primary btn-sm" disabled title="Lógica de carrito pendiente">
-                                        Agregar
-                                    </button>
+                                    @if (auth()->user()->hasRole(\App\Models\Role::STUDENT))
+                                        <form method="POST" action="{{ route('student.cart.add', $producto) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-ce-primary btn-sm">
+                                                <i class="bi bi-cart-plus me-1"></i>Agregar
+                                            </button>
+                                        </form>
+                                    @else
+                                        <a href="{{ route('contacto') }}" class="btn btn-ce-primary btn-sm">
+                                            Solicitar
+                                        </a>
+                                    @endif
                                 @else
                                     <a href="{{ route('login') }}" class="btn btn-outline-ce-primary btn-sm">
                                         Inicia sesión
@@ -84,7 +95,17 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info mb-0">
+                        Aún no hay productos publicados en el catálogo.
+                    </div>
+                </div>
+            @endforelse
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            {{ $productos->links() }}
         </div>
     </div>
 </section>

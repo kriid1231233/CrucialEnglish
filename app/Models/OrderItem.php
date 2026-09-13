@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'items_pedido';
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +19,10 @@ class OrderItem extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'order_id',
-        'product_id',
-        'quantity',
-        'unit_price',
+        'pedido_id',
+        'producto_id',
+        'cantidad',
+        'precio_unitario',
         'subtotal',
     ];
 
@@ -31,8 +34,8 @@ class OrderItem extends Model
     protected function casts(): array
     {
         return [
-            'quantity' => 'integer',
-            'unit_price' => 'decimal:2',
+            'cantidad' => 'integer',
+            'precio_unitario' => 'decimal:2',
             'subtotal' => 'decimal:2',
         ];
     }
@@ -43,7 +46,7 @@ class OrderItem extends Model
      */
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'pedido_id');
     }
 
     /**
@@ -52,6 +55,6 @@ class OrderItem extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'producto_id');
     }
 }

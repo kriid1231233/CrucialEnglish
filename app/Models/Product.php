@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'productos';
+
+    /** Columna de borrado suave en español. */
+    const DELETED_AT = 'eliminado_en';
 
     /**
      * The attributes that are mass assignable.
@@ -18,13 +24,13 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_type_id',
-        'level_id',
-        'name',
-        'description',
-        'base_price',
-        'billing_mode',
-        'is_active',
+        'tipo_producto_id',
+        'nivel_id',
+        'nombre',
+        'descripcion',
+        'precio_base',
+        'modalidad_cobro',
+        'activo',
     ];
 
     /**
@@ -35,8 +41,8 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'base_price' => 'decimal:2',
-            'is_active' => 'boolean',
+            'precio_base' => 'decimal:2',
+            'activo' => 'boolean',
         ];
     }
 
@@ -46,7 +52,7 @@ class Product extends Model
      */
     public function productType(): BelongsTo
     {
-        return $this->belongsTo(ProductType::class);
+        return $this->belongsTo(ProductType::class, 'tipo_producto_id');
     }
 
     /**
@@ -55,7 +61,7 @@ class Product extends Model
      */
     public function level(): BelongsTo
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Level::class, 'nivel_id');
     }
 
     /**
@@ -64,7 +70,27 @@ class Product extends Model
      */
     public function offers(): HasMany
     {
-        return $this->hasMany(ProductOffer::class);
+        return $this->hasMany(ProductOffer::class, 'producto_id');
+    }
+
+    /**
+     * Oferta vigente en este momento, si existe.
+     */
+    public function activeOffer(): ?ProductOffer
+    {
+        return $this->offers()
+            ->where('vigente_desde', '<=', now())
+            ->where('vigente_hasta', '>=', now())
+            ->orderByDesc('precio_oferta')
+            ->first();
+    }
+
+    /**
+     * Precio final a cobrar, considerando ofertas vigentes.
+     */
+    public function currentPrice(): string
+    {
+        return $this->activeOffer()?->precio_oferta ?? $this->precio_base;
     }
 
     /**
@@ -73,7 +99,7 @@ class Product extends Model
      */
     public function orderItems(): HasMany
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'producto_id');
     }
 
     /**
@@ -82,7 +108,7 @@ class Product extends Model
      */
     public function accesses(): HasMany
     {
-        return $this->hasMany(StudentAccess::class);
+        return $this->hasMany(StudentAccess::class, 'producto_id');
     }
 
     /**
@@ -91,7 +117,7 @@ class Product extends Model
      */
     public function subscriptions(): HasMany
     {
-        return $this->hasMany(Subscription::class);
+        return $this->hasMany(Subscription::class, 'producto_id');
     }
 
     /**
@@ -102,20 +128,20 @@ class Product extends Model
     public function currentOffer()
     {
         return $this->offers()
-            ->where('valid_from', '<=', now())
-            ->where('valid_until', '>=', now())
+            ->where('vigente_desde', '<=', now())
+            ->where('vigente_hasta', '>=', now())
             ->first();
     }
 
     /**
-     * Obtiene el precio efectivo (con oferta si existe, sino base_price).
+     * Obtiene el precio efectivo (con oferta si existe, sino precio_base).
      * 
      * @return float
      */
     public function effectivePrice(): float
     {
         $offer = $this->currentOffer();
-        return $offer ? (float) $offer->discount_price : (float) $this->base_price;
+        return $offer ? (float) $offer->precio_oferta : (float) $this->precio_base;
     }
 
     /**

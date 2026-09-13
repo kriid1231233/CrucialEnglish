@@ -22,9 +22,9 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_type_id' => ['required', 'exists:product_types,id'],
-            'level_id' => ['nullable', 'exists:levels,id'],
-            'name' => ['required', 'string', 'max:255', 'unique:products,name'],
+            'product_type_id' => ['required', 'exists:tipos_producto,id'],
+            'level_id' => ['nullable', 'exists:niveles,id'],
+            'name' => ['required', 'string', 'max:255', 'unique:productos,nombre'],
             'description' => ['required', 'string'],
             'base_price' => ['required', 'numeric', 'min:0', 'max:9999999.99'],
             'billing_mode' => [

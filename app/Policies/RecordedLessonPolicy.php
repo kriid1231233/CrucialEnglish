@@ -27,14 +27,14 @@ class RecordedLessonPolicy
         }
 
         // Estudiantes solo pueden ver clases aprobadas con acceso habilitado
-        if ($user->hasRole(Role::STUDENT) && $recordedLesson->status === RecordedLesson::STATUS_APPROVED) {
+        if ($user->hasRole(Role::STUDENT) && $recordedLesson->estado === RecordedLesson::STATUS_APPROVED) {
             return $user->accesses()
-                ->where('product_id', $recordedLesson->id)
-                ->where('access_type', 'recorded_lesson')
-                ->where('is_active', true)
+                ->where('producto_id', $recordedLesson->id)
+                ->where('tipo_acceso', 'recorded_lesson')
+                ->where('activo', true)
                 ->where(function ($query) {
-                    $query->whereNull('expires_at')
-                        ->orWhere('expires_at', '>', now());
+                    $query->whereNull('expira_en')
+                        ->orWhere('expira_en', '>', now());
                 })
                 ->exists();
         }
@@ -63,8 +63,8 @@ class RecordedLessonPolicy
 
         // Docente autor puede editar mientras esté pendiente
         if ($user->hasRole(Role::TEACHER) 
-            && $recordedLesson->author_id === $user->id 
-            && $recordedLesson->status === RecordedLesson::STATUS_PENDING) {
+            && $recordedLesson->autor_id === $user->id 
+            && $recordedLesson->estado === RecordedLesson::STATUS_PENDING) {
             return true;
         }
 
@@ -83,8 +83,8 @@ class RecordedLessonPolicy
 
         // Docente autor puede eliminar mientras esté pendiente
         if ($user->hasRole(Role::TEACHER) 
-            && $recordedLesson->author_id === $user->id 
-            && $recordedLesson->status === RecordedLesson::STATUS_PENDING) {
+            && $recordedLesson->autor_id === $user->id 
+            && $recordedLesson->estado === RecordedLesson::STATUS_PENDING) {
             return true;
         }
 

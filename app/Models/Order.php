@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'pedidos';
 
     /**
      * The attributes that are mass assignable.
@@ -17,9 +20,9 @@ class Order extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
-        'total_amount',
-        'status',
+        'estudiante_id',
+        'monto_total',
+        'estado',
     ];
 
     /**
@@ -30,7 +33,7 @@ class Order extends Model
     protected function casts(): array
     {
         return [
-            'total_amount' => 'decimal:2',
+            'monto_total' => 'decimal:2',
         ];
     }
 
@@ -40,7 +43,7 @@ class Order extends Model
      */
     public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'estudiante_id');
     }
 
     /**
@@ -49,7 +52,7 @@ class Order extends Model
      */
     public function items(): HasMany
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'pedido_id');
     }
 
     /**
@@ -58,7 +61,7 @@ class Order extends Model
      */
     public function payments(): HasMany
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Payment::class, 'pedido_id');
     }
 
     /**
@@ -68,7 +71,7 @@ class Order extends Model
      */
     public function approvedPayment()
     {
-        return $this->payments()->where('status', self::STATUS_APPROVED)->first();
+        return $this->payments()->where('estado', self::STATUS_APPROVED)->first();
     }
 
     /**

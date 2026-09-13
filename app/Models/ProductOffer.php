@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductOffer extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'ofertas_producto';
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +19,10 @@ class ProductOffer extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_id',
-        'discount_price',
-        'valid_from',
-        'valid_until',
+        'producto_id',
+        'precio_oferta',
+        'vigente_desde',
+        'vigente_hasta',
     ];
 
     /**
@@ -30,9 +33,9 @@ class ProductOffer extends Model
     protected function casts(): array
     {
         return [
-            'discount_price' => 'decimal:2',
-            'valid_from' => 'datetime',
-            'valid_until' => 'datetime',
+            'precio_oferta' => 'decimal:2',
+            'vigente_desde' => 'datetime',
+            'vigente_hasta' => 'datetime',
         ];
     }
 
@@ -42,7 +45,7 @@ class ProductOffer extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'producto_id');
     }
 
     /**
@@ -52,6 +55,6 @@ class ProductOffer extends Model
      */
     public function isValid(): bool
     {
-        return now()->between($this->valid_from, $this->valid_until);
+        return now()->between($this->vigente_desde, $this->vigente_hasta);
     }
 }

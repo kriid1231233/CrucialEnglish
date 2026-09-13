@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +13,10 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, ConMarcasDeTiempoEnEspanol;
+
+    /** Columna de borrado suave en español. */
+    const DELETED_AT = 'eliminado_en';
 
     /**
      * The attributes that are mass assignable.
@@ -20,10 +24,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nombre',
         'email',
         'password',
-        'active',
+        'activo',
         'email_verified_at',
     ];
 
@@ -47,18 +51,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'active' => 'boolean',
+            'activo' => 'boolean',
         ];
     }
 
     /**
      * Los roles que tiene este usuario.
-     * Relación muchos a muchos a través de user_roles.
+     * Relación muchos a muchos a través de roles_usuario.
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'user_roles')
-            ->withPivot('assigned_at', 'assigned_by')
+        return $this->belongsToMany(Role::class, 'roles_usuario', 'usuario_id', 'rol_id')
+            ->withPivot('asignado_en', 'asignado_por')
             ->withTimestamps();
     }
 
@@ -68,7 +72,7 @@ class User extends Authenticatable
      */
     public function studentProfile(): HasOne
     {
-        return $this->hasOne(StudentProfile::class);
+        return $this->hasOne(StudentProfile::class, 'usuario_id');
     }
 
     /**
@@ -77,7 +81,7 @@ class User extends Authenticatable
      */
     public function teacherProfile(): HasOne
     {
-        return $this->hasOne(TeacherProfile::class);
+        return $this->hasOne(TeacherProfile::class, 'usuario_id');
     }
 
     /**
@@ -86,26 +90,42 @@ class User extends Authenticatable
      */
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, 'student_id');
+        return $this->hasMany(Order::class, 'estudiante_id');
+    }
+
+    /**
+     * El carrito de compra activo del estudiante (orden en estado pendiente).
+     */
+    public function cartOrder(): ?Order
+    {
+        return $this->orders()->where('estado', Order::STATUS_PENDING)->first();
+    }
+
+    /**
+     * Cantidad total de items en el carrito activo del estudiante.
+     */
+    public function cartItemsCount(): int
+    {
+        return (int) ($this->cartOrder()?->items()->sum('cantidad') ?? 0);
     }
 
     /**
      * Grupos académicos gestionados por este docente.
-     * Relación uno a muchos (teacher_id en academic_groups).
+     * Relación uno a muchos (docente_id en grupos_academicos).
      */
     public function teacherGroups(): HasMany
     {
-        return $this->hasMany(AcademicGroup::class, 'teacher_id');
+        return $this->hasMany(AcademicGroup::class, 'docente_id');
     }
 
     /**
      * Grupos académicos en los que este estudiante está inscrito.
-     * Relación muchos a muchos a través de group_students.
+     * Relación muchos a muchos a través de estudiantes_grupo.
      */
     public function studentGroups(): BelongsToMany
     {
-        return $this->belongsToMany(AcademicGroup::class, 'group_students', 'student_id', 'group_id')
-            ->withPivot('joined_at', 'left_at', 'is_active')
+        return $this->belongsToMany(AcademicGroup::class, 'estudiantes_grupo', 'estudiante_id', 'grupo_id')
+            ->withPivot('union_en', 'salida_en', 'activo')
             ->withTimestamps();
     }
 
@@ -115,7 +135,7 @@ class User extends Authenticatable
      */
     public function grades(): HasMany
     {
-        return $this->hasMany(StudentGrade::class, 'student_id');
+        return $this->hasMany(StudentGrade::class, 'estudiante_id');
     }
 
     /**
@@ -124,17 +144,17 @@ class User extends Authenticatable
      */
     public function records(): HasMany
     {
-        return $this->hasMany(StudentRecord::class, 'student_id');
+        return $this->hasMany(StudentRecord::class, 'estudiante_id');
     }
 
     /**
      * Asistencia del estudiante a sesiones de clase.
-     * Relación muchos a muchos a través de class_session_students.
+     * Relación muchos a muchos a través de asistencia_sesion.
      */
     public function classSessionAttendances(): BelongsToMany
     {
-        return $this->belongsToMany(ClassSession::class, 'class_session_students', 'student_id', 'class_session_id')
-            ->withPivot('attendance_status', 'notes')
+        return $this->belongsToMany(ClassSession::class, 'asistencia_sesion', 'estudiante_id', 'sesion_clase_id')
+            ->withPivot('estado_asistencia', 'notas')
             ->withTimestamps();
     }
 
@@ -144,7 +164,7 @@ class User extends Authenticatable
      */
     public function accesses(): HasMany
     {
-        return $this->hasMany(StudentAccess::class, 'student_id');
+        return $this->hasMany(StudentAccess::class, 'estudiante_id');
     }
 
     /**
@@ -153,7 +173,7 @@ class User extends Authenticatable
      */
     public function subscriptions(): HasMany
     {
-        return $this->hasMany(Subscription::class, 'student_id');
+        return $this->hasMany(Subscription::class, 'estudiante_id');
     }
 
     /**
@@ -162,7 +182,7 @@ class User extends Authenticatable
      */
     public function authoredMaterials(): HasMany
     {
-        return $this->hasMany(Material::class, 'author_id');
+        return $this->hasMany(Material::class, 'autor_id');
     }
 
     /**
@@ -171,7 +191,7 @@ class User extends Authenticatable
      */
     public function authoredRecordedLessons(): HasMany
     {
-        return $this->hasMany(RecordedLesson::class, 'author_id');
+        return $this->hasMany(RecordedLesson::class, 'autor_id');
     }
 
     /**
@@ -180,7 +200,7 @@ class User extends Authenticatable
      */
     public function reviewedMaterials(): HasMany
     {
-        return $this->hasMany(Material::class, 'reviewed_by');
+        return $this->hasMany(Material::class, 'revisado_por');
     }
 
     /**
@@ -189,7 +209,7 @@ class User extends Authenticatable
      */
     public function reviewedRecordedLessons(): HasMany
     {
-        return $this->hasMany(RecordedLesson::class, 'reviewed_by');
+        return $this->hasMany(RecordedLesson::class, 'revisado_por');
     }
 
     /**
@@ -198,7 +218,7 @@ class User extends Authenticatable
      */
     public function announcements(): HasMany
     {
-        return $this->hasMany(Announcement::class, 'author_id');
+        return $this->hasMany(Announcement::class, 'autor_id');
     }
 
     /**
@@ -209,7 +229,7 @@ class User extends Authenticatable
      */
     public function hasRole(string $roleSlug): bool
     {
-        return $this->roles()->where('slug', $roleSlug)->exists();
+        return $this->roles()->where('identificador', $roleSlug)->exists();
     }
 
     /**
@@ -220,7 +240,7 @@ class User extends Authenticatable
      */
     public function hasAnyRole(array $roleSlugs): bool
     {
-        return $this->roles()->whereIn('slug', $roleSlugs)->exists();
+        return $this->roles()->whereIn('identificador', $roleSlugs)->exists();
     }
 
     /**
@@ -231,6 +251,6 @@ class User extends Authenticatable
      */
     public function hasAllRoles(array $roleSlugs): bool
     {
-        return $this->roles()->whereIn('slug', $roleSlugs)->count() === count($roleSlugs);
+        return $this->roles()->whereIn('identificador', $roleSlugs)->count() === count($roleSlugs);
     }
 }

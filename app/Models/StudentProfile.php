@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StudentProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'perfiles_estudiante';
 
     /**
      * The attributes that are mass assignable.
@@ -16,11 +19,11 @@ class StudentProfile extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
-        'phone',
-        'birth_date',
-        'contact_preferences',
-        'availability_notes',
+        'usuario_id',
+        'telefono',
+        'fecha_nacimiento',
+        'preferencias_contacto',
+        'notas_disponibilidad',
     ];
 
     /**
@@ -31,7 +34,7 @@ class StudentProfile extends Model
     protected function casts(): array
     {
         return [
-            'birth_date' => 'date',
+            'fecha_nacimiento' => 'date',
         ];
     }
 
@@ -41,6 +44,6 @@ class StudentProfile extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 }

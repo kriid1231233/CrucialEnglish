@@ -63,7 +63,14 @@
             <div class="auth-logo">
                 <h2>CrucialEnglish</h2>
             </div>
-            
+
+            @if (session('status'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </div>

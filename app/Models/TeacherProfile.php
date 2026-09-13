@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeacherProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'perfiles_docente';
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +19,10 @@ class TeacherProfile extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
-        'specialization',
-        'bio',
-        'availability_schedule',
+        'usuario_id',
+        'especializacion',
+        'biografia',
+        'horario_disponibilidad',
     ];
 
     /**
@@ -28,6 +31,6 @@ class TeacherProfile extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 }

@@ -14,30 +14,30 @@ class ProductTypeSeeder extends Seeder
     {
         $productTypes = [
             [
-                'name' => 'Clase Individual',
-                'slug' => ProductType::INDIVIDUAL_CLASS,
-                'description' => 'Clases personalizadas uno a uno con el docente, adaptadas a las necesidades específicas del estudiante.',
+                'nombre' => 'Clase Individual',
+                'identificador' => ProductType::INDIVIDUAL_CLASS,
+                'descripcion' => 'Clases personalizadas uno a uno con el docente, adaptadas a las necesidades específicas del estudiante.',
             ],
             [
-                'name' => 'Clase Grupal',
-                'slug' => ProductType::GROUP_CLASS,
-                'description' => 'Clases en grupo reducido, ideal para practicar conversación y aprender en comunidad.',
+                'nombre' => 'Clase Grupal',
+                'identificador' => ProductType::GROUP_CLASS,
+                'descripcion' => 'Clases en grupo reducido, ideal para practicar conversación y aprender en comunidad.',
             ],
             [
-                'name' => 'Material de Apoyo',
-                'slug' => ProductType::SUPPORT_MATERIAL,
-                'description' => 'Recursos didácticos digitales: PDFs, ejercicios, guías de estudio y material complementario.',
+                'nombre' => 'Material de Apoyo',
+                'identificador' => ProductType::SUPPORT_MATERIAL,
+                'descripcion' => 'Recursos didácticos digitales: PDFs, ejercicios, guías de estudio y material complementario.',
             ],
             [
-                'name' => 'Suscripción',
-                'slug' => ProductType::SUBSCRIPTION,
-                'description' => 'Acceso ilimitado a clases pregrabadas, materiales y recursos educativos durante el período contratado.',
+                'nombre' => 'Suscripción',
+                'identificador' => ProductType::SUBSCRIPTION,
+                'descripcion' => 'Acceso ilimitado a clases pregrabadas, materiales y recursos educativos durante el período contratado.',
             ],
         ];
 
         foreach ($productTypes as $typeData) {
             ProductType::firstOrCreate(
-                ['slug' => $typeData['slug']],
+                ['identificador' => $typeData['identificador']],
                 $typeData
             );
         }

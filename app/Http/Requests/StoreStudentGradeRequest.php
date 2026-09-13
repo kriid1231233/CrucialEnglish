@@ -22,9 +22,9 @@ class StoreStudentGradeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => ['required', 'exists:users,id'],
-            'level_id' => ['required', 'exists:levels,id'],
-            'group_id' => ['nullable', 'exists:academic_groups,id'],
+            'student_id' => ['required', 'exists:usuarios,id'],
+            'level_id' => ['required', 'exists:niveles,id'],
+            'group_id' => ['nullable', 'exists:grupos_academicos,id'],
             'evaluation_type' => [
                 'required',
                 Rule::in([

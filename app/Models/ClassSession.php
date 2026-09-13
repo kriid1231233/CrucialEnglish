@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ClassSession extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'sesiones_clase';
 
     /**
      * The attributes that are mass assignable.
@@ -17,12 +20,12 @@ class ClassSession extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'group_id',
-        'session_date',
-        'start_time',
-        'duration_minutes',
-        'topic',
-        'status',
+        'grupo_id',
+        'fecha_sesion',
+        'hora_inicio',
+        'duracion_minutos',
+        'tema',
+        'estado',
     ];
 
     /**
@@ -33,9 +36,9 @@ class ClassSession extends Model
     protected function casts(): array
     {
         return [
-            'session_date' => 'date',
-            'start_time' => 'datetime',
-            'duration_minutes' => 'integer',
+            'fecha_sesion' => 'date',
+            'hora_inicio' => 'datetime',
+            'duracion_minutos' => 'integer',
         ];
     }
 
@@ -45,17 +48,17 @@ class ClassSession extends Model
      */
     public function academicGroup(): BelongsTo
     {
-        return $this->belongsTo(AcademicGroup::class, 'group_id');
+        return $this->belongsTo(AcademicGroup::class, 'grupo_id');
     }
 
     /**
      * Los estudiantes y su asistencia a esta sesión.
-     * Relación muchos a muchos a través de class_session_students.
+     * Relación muchos a muchos a través de asistencia_sesion.
      */
     public function attendances(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'class_session_students', 'class_session_id', 'student_id')
-            ->withPivot('attendance_status', 'notes')
+        return $this->belongsToMany(User::class, 'asistencia_sesion', 'sesion_clase_id', 'estudiante_id')
+            ->withPivot('estado_asistencia', 'notas')
             ->withTimestamps();
     }
 

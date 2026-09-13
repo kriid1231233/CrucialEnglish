@@ -30,8 +30,15 @@ class DatabaseSeeder extends Seeder
         ]);
         $this->command->newLine();
 
-        // 3. Datos de prueba (descomentar en desarrollo)
-        // $this->command->info('🧪 Paso 3: Datos de prueba (desarrollo)');
+        // 3. Catálogo inicial de productos
+        $this->command->info('🛒 Paso 3: Catálogo de productos');
+        $this->call([
+            ProductSeeder::class,
+        ]);
+        $this->command->newLine();
+
+        // 4. Datos de prueba (descomentar en desarrollo)
+        // $this->command->info('🧪 Paso 4: Datos de prueba (desarrollo)');
         // $this->call([
         //     TestUsersSeeder::class,
         //     TestProductsSeeder::class,

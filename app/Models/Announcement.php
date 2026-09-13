@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Announcement extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'anuncios';
 
     /**
      * The attributes that are mass assignable.
@@ -16,13 +19,13 @@ class Announcement extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
-        'content',
-        'author_id',
-        'audience_type',
-        'audience_id',
-        'status',
-        'published_at',
+        'titulo',
+        'contenido',
+        'autor_id',
+        'tipo_audiencia',
+        'audiencia_id',
+        'estado',
+        'publicado_en',
     ];
 
     /**
@@ -33,7 +36,7 @@ class Announcement extends Model
     protected function casts(): array
     {
         return [
-            'published_at' => 'datetime',
+            'publicado_en' => 'datetime',
         ];
     }
 
@@ -43,7 +46,7 @@ class Announcement extends Model
      */
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'autor_id');
     }
 
     /**

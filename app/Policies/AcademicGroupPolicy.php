@@ -28,7 +28,7 @@ class AcademicGroupPolicy
         }
 
         // Docente asignado puede ver su grupo
-        if ($user->hasRole(Role::TEACHER) && $academicGroup->teacher_id === $user->id) {
+        if ($user->hasRole(Role::TEACHER) && $academicGroup->docente_id === $user->id) {
             return true;
         }
 
@@ -60,7 +60,7 @@ class AcademicGroupPolicy
         }
 
         // Docente asignado puede editar su grupo (solo ciertos campos)
-        if ($user->hasRole(Role::TEACHER) && $academicGroup->teacher_id === $user->id) {
+        if ($user->hasRole(Role::TEACHER) && $academicGroup->docente_id === $user->id) {
             return true;
         }
 
@@ -103,7 +103,7 @@ class AcademicGroupPolicy
         }
 
         // Docente asignado puede gestionar estudiantes de su grupo
-        if ($user->hasRole(Role::TEACHER) && $academicGroup->teacher_id === $user->id) {
+        if ($user->hasRole(Role::TEACHER) && $academicGroup->docente_id === $user->id) {
             return true;
         }
 

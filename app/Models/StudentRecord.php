@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StudentRecord extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'registros_estudiante';
 
     /**
      * The attributes that are mass assignable.
@@ -16,11 +19,11 @@ class StudentRecord extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
-        'level_id',
-        'completed_at',
-        'average_grade',
-        'passed',
+        'estudiante_id',
+        'nivel_id',
+        'completado_en',
+        'promedio',
+        'aprobado',
     ];
 
     /**
@@ -31,9 +34,9 @@ class StudentRecord extends Model
     protected function casts(): array
     {
         return [
-            'completed_at' => 'date',
-            'average_grade' => 'decimal:1',
-            'passed' => 'boolean',
+            'completado_en' => 'date',
+            'promedio' => 'decimal:1',
+            'aprobado' => 'boolean',
         ];
     }
 
@@ -43,7 +46,7 @@ class StudentRecord extends Model
      */
     public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'estudiante_id');
     }
 
     /**
@@ -52,6 +55,6 @@ class StudentRecord extends Model
      */
     public function level(): BelongsTo
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Level::class, 'nivel_id');
     }
 }

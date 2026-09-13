@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Material extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'materiales';
 
     /**
      * The attributes that are mass assignable.
@@ -16,16 +19,16 @@ class Material extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
-        'description',
-        'level_id',
-        'file_type',
-        'file_path',
-        'external_link',
-        'status',
-        'author_id',
-        'reviewed_by',
-        'reviewed_at',
+        'titulo',
+        'descripcion',
+        'nivel_id',
+        'tipo_archivo',
+        'ruta_archivo',
+        'enlace_externo',
+        'estado',
+        'autor_id',
+        'revisado_por',
+        'revisado_en',
     ];
 
     /**
@@ -36,7 +39,7 @@ class Material extends Model
     protected function casts(): array
     {
         return [
-            'reviewed_at' => 'datetime',
+            'revisado_en' => 'datetime',
         ];
     }
 
@@ -46,7 +49,7 @@ class Material extends Model
      */
     public function level(): BelongsTo
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Level::class, 'nivel_id');
     }
 
     /**
@@ -55,7 +58,7 @@ class Material extends Model
      */
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'autor_id');
     }
 
     /**
@@ -64,7 +67,7 @@ class Material extends Model
      */
     public function reviewer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'reviewed_by');
+        return $this->belongsTo(User::class, 'revisado_por');
     }
 
     /**

@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ConMarcasDeTiempoEnEspanol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StudentGrade extends Model
 {
-    use HasFactory;
+    use HasFactory, ConMarcasDeTiempoEnEspanol;
+
+    protected $table = 'notas_estudiante';
 
     /**
      * The attributes that are mass assignable.
@@ -16,13 +19,13 @@ class StudentGrade extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
-        'level_id',
-        'group_id',
-        'evaluation_type',
-        'grade',
-        'evaluation_date',
-        'comments',
+        'estudiante_id',
+        'nivel_id',
+        'grupo_id',
+        'tipo_evaluacion',
+        'nota',
+        'fecha_evaluacion',
+        'comentarios',
     ];
 
     /**
@@ -33,8 +36,8 @@ class StudentGrade extends Model
     protected function casts(): array
     {
         return [
-            'grade' => 'decimal:1',
-            'evaluation_date' => 'date',
+            'nota' => 'decimal:1',
+            'fecha_evaluacion' => 'date',
         ];
     }
 
@@ -44,7 +47,7 @@ class StudentGrade extends Model
      */
     public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'estudiante_id');
     }
 
     /**
@@ -53,7 +56,7 @@ class StudentGrade extends Model
      */
     public function level(): BelongsTo
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Level::class, 'nivel_id');
     }
 
     /**
@@ -62,7 +65,7 @@ class StudentGrade extends Model
      */
     public function academicGroup(): BelongsTo
     {
-        return $this->belongsTo(AcademicGroup::class, 'group_id');
+        return $this->belongsTo(AcademicGroup::class, 'grupo_id');
     }
 
     /**

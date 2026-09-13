@@ -27,14 +27,14 @@ class MaterialPolicy
         }
 
         // Estudiantes solo pueden ver materiales aprobados con acceso habilitado
-        if ($user->hasRole(Role::STUDENT) && $material->status === Material::STATUS_APPROVED) {
+        if ($user->hasRole(Role::STUDENT) && $material->estado === Material::STATUS_APPROVED) {
             return $user->accesses()
-                ->where('product_id', $material->id)
-                ->where('access_type', 'material')
-                ->where('is_active', true)
+                ->where('producto_id', $material->id)
+                ->where('tipo_acceso', 'material')
+                ->where('activo', true)
                 ->where(function ($query) {
-                    $query->whereNull('expires_at')
-                        ->orWhere('expires_at', '>', now());
+                    $query->whereNull('expira_en')
+                        ->orWhere('expira_en', '>', now());
                 })
                 ->exists();
         }
@@ -63,8 +63,8 @@ class MaterialPolicy
 
         // Docente autor puede editar mientras esté pendiente
         if ($user->hasRole(Role::TEACHER) 
-            && $material->author_id === $user->id 
-            && $material->status === Material::STATUS_PENDING) {
+            && $material->autor_id === $user->id 
+            && $material->estado === Material::STATUS_PENDING) {
             return true;
         }
 
@@ -83,8 +83,8 @@ class MaterialPolicy
 
         // Docente autor puede eliminar mientras esté pendiente
         if ($user->hasRole(Role::TEACHER) 
-            && $material->author_id === $user->id 
-            && $material->status === Material::STATUS_PENDING) {
+            && $material->autor_id === $user->id 
+            && $material->estado === Material::STATUS_PENDING) {
             return true;
         }
 

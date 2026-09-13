@@ -49,7 +49,7 @@
                                        class="form-control @error('name') is-invalid @enderror" 
                                        id="name" 
                                        name="name" 
-                                       value="{{ old('name', Auth::user()->name) }}" 
+                                       value="{{ old('name', Auth::user()->nombre) }}" 
                                        required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -75,9 +75,9 @@
                         <hr class="my-4">
 
                         <h5 class="mb-3">Información de la Cuenta</h5>
-                        <p><strong>Cuenta creada:</strong> {{ Auth::user()->created_at->format('d/m/Y') }}</p>
+                        <p><strong>Cuenta creada:</strong> {{ Auth::user()->creado_en->format('d/m/Y') }}</p>
                         <p><strong>Estado:</strong> 
-                            @if(Auth::user()->active)
+                            @if(Auth::user()->activo)
                                 <span class="badge bg-success">Activa</span>
                             @else
                                 <span class="badge bg-danger">Inactiva</span>

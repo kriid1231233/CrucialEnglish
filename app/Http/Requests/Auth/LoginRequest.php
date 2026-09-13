@@ -65,7 +65,7 @@ class LoginRequest extends FormRequest
         }
 
         // Verificar que el usuario esté activo
-        if (! Auth::user()->active) {
+        if (! Auth::user()->activo) {
             Auth::logout();
             throw ValidationException::withMessages([
                 'email' => 'Tu cuenta está inactiva. Contacta al administrador.',

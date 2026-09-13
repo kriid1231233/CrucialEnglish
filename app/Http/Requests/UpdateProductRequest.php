@@ -24,9 +24,9 @@ class UpdateProductRequest extends FormRequest
         $productId = $this->route('product')->id;
 
         return [
-            'product_type_id' => ['sometimes', 'exists:product_types,id'],
-            'level_id' => ['nullable', 'exists:levels,id'],
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('products', 'name')->ignore($productId)],
+            'product_type_id' => ['sometimes', 'exists:tipos_producto,id'],
+            'level_id' => ['nullable', 'exists:niveles,id'],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique('productos', 'nombre')->ignore($productId)],
             'description' => ['sometimes', 'string'],
             'base_price' => ['sometimes', 'numeric', 'min:0', 'max:9999999.99'],
             'billing_mode' => [

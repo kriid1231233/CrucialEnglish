@@ -16,7 +16,7 @@ class EnsureUserIsActive
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && !$request->user()->active) {
+        if ($request->user() && !$request->user()->activo) {
             auth()->logout();
             
             return redirect()->route('login')

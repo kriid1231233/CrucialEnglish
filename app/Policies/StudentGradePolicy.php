@@ -28,12 +28,12 @@ class StudentGradePolicy
 
         // Docente del grupo puede ver las notas de su grupo
         if ($user->hasRole(Role::TEACHER) && $studentGrade->group) {
-            return $studentGrade->group->teacher_id === $user->id;
+            return $studentGrade->group->docente_id === $user->id;
         }
 
         // Estudiante puede ver sus propias notas
         if ($user->hasRole(Role::STUDENT)) {
-            return $studentGrade->student_id === $user->id;
+            return $studentGrade->estudiante_id === $user->id;
         }
 
         return false;
@@ -60,7 +60,7 @@ class StudentGradePolicy
 
         // Docente del grupo puede editar las notas de su grupo
         if ($user->hasRole(Role::TEACHER) && $studentGrade->group) {
-            return $studentGrade->group->teacher_id === $user->id;
+            return $studentGrade->group->docente_id === $user->id;
         }
 
         return false;
@@ -78,7 +78,7 @@ class StudentGradePolicy
 
         // Docente del grupo puede eliminar las notas de su grupo
         if ($user->hasRole(Role::TEACHER) && $studentGrade->group) {
-            return $studentGrade->group->teacher_id === $user->id;
+            return $studentGrade->group->docente_id === $user->id;
         }
 
         return false;

@@ -22,9 +22,9 @@ class UpdateStudentGradeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => ['sometimes', 'exists:users,id'],
-            'level_id' => ['sometimes', 'exists:levels,id'],
-            'group_id' => ['nullable', 'exists:academic_groups,id'],
+            'student_id' => ['sometimes', 'exists:usuarios,id'],
+            'level_id' => ['sometimes', 'exists:niveles,id'],
+            'group_id' => ['nullable', 'exists:grupos_academicos,id'],
             'evaluation_type' => [
                 'sometimes',
                 Rule::in([

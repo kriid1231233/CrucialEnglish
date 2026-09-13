@@ -29,7 +29,7 @@ class OrderPolicy
 
         // Estudiante puede ver solo sus propias órdenes
         if ($user->hasRole(Role::STUDENT)) {
-            return $order->student_id === $user->id;
+            return $order->estudiante_id === $user->id;
         }
 
         return false;
@@ -56,8 +56,8 @@ class OrderPolicy
 
         // Estudiante puede actualizar solo sus órdenes pendientes
         if ($user->hasRole(Role::STUDENT) 
-            && $order->student_id === $user->id 
-            && $order->status === Order::STATUS_PENDING) {
+            && $order->estudiante_id === $user->id 
+            && $order->estado === Order::STATUS_PENDING) {
             return true;
         }
 
@@ -76,8 +76,8 @@ class OrderPolicy
 
         // Estudiante puede cancelar solo sus órdenes pendientes
         if ($user->hasRole(Role::STUDENT) 
-            && $order->student_id === $user->id 
-            && $order->status === Order::STATUS_PENDING) {
+            && $order->estudiante_id === $user->id 
+            && $order->estado === Order::STATUS_PENDING) {
             return true;
         }
 
